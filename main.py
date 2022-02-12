@@ -1,5 +1,9 @@
 import discord
 import os
+from dotenv import load_dotenv
+
+load_dotenv()
+TOKEN = os.getenv('TOKEN')
 
 client = discord.Client()
 
@@ -15,4 +19,4 @@ async def on_message(message):
     if message.content.startswith('$duck'):
         await message.channel.send('Quack!')
 
-client.run(os.getenv('TOKEN'))
+client.run(TOKEN)
