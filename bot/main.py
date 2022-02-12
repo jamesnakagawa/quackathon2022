@@ -33,6 +33,15 @@ async def on_message(message):
         await message.channel.send('Quack!')
 
 
+#testing purposes
+@client.event
+async def on_member_join(member, message):
+    if message.author == client.user:
+        return
+
+    await message.channel.send('Quack! {member} has joined this test server!')
+
+
 @client.command()
 async def ducky(ctx):
     API = "https://random-d.uk/api/v2/random"
