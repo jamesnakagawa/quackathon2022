@@ -21,11 +21,15 @@ client = commands.Bot(command_prefix='$', intents=intents)
 slash = SlashCommand(client, sync_commands=True)
 
 # On start
+
+
 @client.event
 async def on_ready():
     print('We have logged in as {0.user}'.format(client))
 
 # On message received
+
+
 @client.event
 async def on_message(message):
     if message.author == client.user:
@@ -38,8 +42,8 @@ async def on_message(message):
 
 # bot commands
 
-@slash.slash(name="Verify", description="Posts a random duck image!")
 
+@slash.slash(name="Verify", description="Posts a random duck image!")
 @client.command(name="ducky", help="Posts a random duck image")
 async def ducky(ctx):
     API = "https://random-d.uk/api/v2/random"
@@ -52,25 +56,23 @@ async def ducky(ctx):
         else:
             await ctx.send("Error getting image. API returned {}".format(response.status))
 
+
 @client.command(name="spawn", help="Spawns a random duck")
 async def spawn(ctx):
     duck = duckmon.get_specific_duck()
-    await ctx.send("Duck spawned!")
-
-    #image here
+    # image here
     API = "https://random-d.uk/api/v2/random"
     async with request("GET", API, headers={}) as response:
         if response.status == 200:
             buffer = await response.json()
-            url = buffer['url']
-            await ctx.send(url)
+            duckValue = buffer['url']
+            embed = discord.Embed(title="A Duck has spawned", description="ID: {} \nMood: {} \nAttack: {}\nDefence: {}".format(
+                stats[0], stats[1], stats[2], stats[3]), color=discord.Color.green())
+            embed.set_image(url=duckValue)
+            await ctx.send(embed=embed)
         else:
             await ctx.send("Error getting image. API returned {}".format(response.status))
-
-    await ctx.send("ID: 23")
-    await ctx.send("Mood: Excited")
-    await ctx.send("Attack: 5")
-    await ctx.send("Defence: 2")
+    await ctx.send()
 
 # Run
 client.run(os.getenv('TOKEN'))
