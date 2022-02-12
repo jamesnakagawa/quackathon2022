@@ -12,7 +12,7 @@ async def on_message(message):
     if message.author == client.user:
         return
 
-    if message.content.startswith('$hello'):
-        await message.channel.send('Hello!')
+    if message.content.startswith('$duck'):
+        await message.channel.send('Quack!')
 
-client.run(os.getenv('OTQyMDk3MTU0NTM5OTEzMjI2.YgfiWA.orK4oItvCgMTX3gH7aPz_XLVthM'))
+client.run(os.getenv('TOKEN'))
