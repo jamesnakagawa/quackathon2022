@@ -16,6 +16,7 @@ async def on_message(message):
     await client.process_commands(message)
 
     json_file = open('settings.json', 'w+', encoding="utf-8")
-    data = json.loads(json_file)
+    data = json.load(json_file)
     json_file.close()
 
+    print(data)
