@@ -27,8 +27,6 @@ async def on_message(message):
     if message.content.startswith('$duck'):
         await message.channel.send('Quack!')
 
-client.run(TOKEN)
-
 
 @client.command(name='ducky', help='Loads a duck image')
 async def ducky(ctx):
