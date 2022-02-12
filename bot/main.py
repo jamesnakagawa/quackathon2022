@@ -2,6 +2,7 @@ import imp
 from unicodedata import name
 import discord
 from discord.ext import commands, tasks
+from discord_slash import SlashCommand, SlashContext
 import os
 import json
 from aiohttp import *
@@ -16,6 +17,7 @@ intents.members = True
 intents.presences = True
 
 client = commands.Bot(command_prefix='$', intents=intents)
+slash = SlashCommand(client, sync_commands=True)
 
 # On start
 @client.event
@@ -33,7 +35,12 @@ async def on_message(message):
 
     await client.process_commands(message)
 
+<<<<<<< HEAD
 # bot commands
+=======
+
+@slash.slash(name="Verify", description="Posts a random duck image!")
+>>>>>>> 4d34bf520fa658f92d61e653b407b86daa381645
 @client.command(name="ducky", help="Posts a random duck image")
 async def ducky(ctx):
     API = "https://random-d.uk/api/v2/random"
