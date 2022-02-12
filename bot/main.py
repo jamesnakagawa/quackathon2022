@@ -52,5 +52,25 @@ async def ducky(ctx):
         else:
             await ctx.send("Error getting image. API returned {}".format(response.status))
 
+@client.command(name="spawn", help="Spawns a random duck")
+async def spawn(ctx):
+    duck = duckmon.get_specific_duck()
+    await ctx.send("Duck spawned!")
+
+    #image here
+    API = "https://random-d.uk/api/v2/random"
+    async with request("GET", API, headers={}) as response:
+        if response.status == 200:
+            buffer = await response.json()
+            url = buffer['url']
+            await ctx.send(url)
+        else:
+            await ctx.send("Error getting image. API returned {}".format(response.status))
+
+    await ctx.send("ID: 23")
+    await ctx.send("Mood: Excited")
+    await ctx.send("Attack: 5")
+    await ctx.send("Defence: 2")
+
 # Run
 client.run(os.getenv('TOKEN'))
