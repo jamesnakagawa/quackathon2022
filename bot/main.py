@@ -2,7 +2,6 @@ import imp
 from unicodedata import name
 import discord
 from discord.ext import commands, tasks
-from discord_slash import SlashCommand, SlashContext
 import os
 import json
 from aiohttp import *
@@ -18,7 +17,6 @@ intents.members = True
 intents.presences = True
 
 client = commands.Bot(command_prefix='$', intents=intents)
-slash = SlashCommand(client, sync_commands=True)
 
 # On start
 
@@ -37,6 +35,8 @@ async def on_message(message):
 
     if message.content == "duck":
         await message.channel.send('Quack!')
+    elif message.content == "status":
+        await message.channel.send('Quackmon!')
 
     await client.process_commands(message)
 
@@ -49,7 +49,6 @@ async def on_message(message):
 # bot commands
 
 
-@slash.slash(name="Verify", description="Posts a random duck image!")
 @client.command(name="ducky", help="Posts a random duck image")
 async def ducky(ctx):
     API = "https://random-d.uk/api/v2/random"
@@ -72,7 +71,8 @@ async def spawn(ctx):
             duckValue = buffer['url']
             stats = duckmon.get_specific_duck()
             embed = discord.Embed(title="A Duck has spawned", description="ID: {} \nMood: {} \nAttack: {}\nDefence: {}".format(
-                stats[0], stats[1], stats[2], stats[3]), color=discord.Color.from_rgb(stats[4]))
+                stats[0], stats[1], stats[2], stats[3]))
+            # color=discord.Color.from_rgb(stats[4])
             embed.set_image(url=duckValue)
             await ctx.send(embed=embed)
         else:
@@ -81,7 +81,10 @@ async def spawn(ctx):
 
 @client.command()
 async def shutdown(ctx):
+    client.logout()
+    client.close()
     exit()
+
 
 # Run
 client.run(os.getenv('TOKEN'))
