@@ -5,6 +5,7 @@ from aiohttp import *
 
 # bot commands
 
+
 @client.command(name="ducky", help="Posts a random duck image")
 async def ducky(ctx):
     API = "https://random-d.uk/api/v2/random"
@@ -26,9 +27,9 @@ async def spawn(ctx):
             buffer = await response.json()
             duckValue = buffer['url']
             stats = duckmon.get_specific_duck()
+            c = stats[4]
             embed = discord.Embed(title="A Duck has spawned", description="ID: {} \nMood: {} \nAttack: {}\nDefence: {}".format(
-                stats[0], stats[1], stats[2], stats[3]))
-            # color=discord.Color.from_rgb(stats[4])
+                stats[0], stats[1], stats[2], stats[3]), color=discord.Color.from_rgb(c[0], c[1], c[2]))
             embed.set_image(url=duckValue)
             await ctx.send(embed=embed)
         else:
