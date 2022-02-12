@@ -1,13 +1,13 @@
 from sqlalchemy import create_engine
 from sqlalchemy.orm import declarative_base, sessionmaker, relationship
-from sqlalchemy import MetaData, String, Column, Text, DateTime, ForeignKey, Integer, Float, Boolean
+from sqlalchemy import String, Column, Text, DateTime, ForeignKey, Integer, Float, Boolean
 from datetime import datetime
+from random import randint
 
 engine = create_engine('sqlite:///sqlite3.db') # using relative path
 engine.connect()
 
 Base = declarative_base()
-metadata = MetaData()
 
 class Player(Base):
   __tablename__ = 'player'
@@ -22,6 +22,9 @@ class Player(Base):
 
   def current_battle(self):
     return self.current_battle_p1 or self.current_battle_p2
+
+  def available_ducks(self):
+    return [duck for duck in self.ducks if duck.fainted_on is None]
 
   def __repr__(self):
     return "<Player(id='%s', handle='%s')>" % (self.id, self.handle)
@@ -105,7 +108,7 @@ class Battle(Base):
     if (choice == 1):
       attacker_duck = self.attacker
       defender_duck = self.defender
-      attack = 10 * attacker_duck.attack / defender_duck.defence
+      attack = randint(8, 12) * attacker_duck.attack / defender_duck.defence
       if (defender_duck.current_hp < attack):
         defender_duck.fainted_on = datetime.now
         return False
