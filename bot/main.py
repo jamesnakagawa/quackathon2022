@@ -2,7 +2,6 @@ import imp
 from unicodedata import name
 import discord
 from discord.ext import commands, tasks
-from discord_slash import SlashCommand, SlashContext
 import os
 import json
 from aiohttp import *
@@ -15,8 +14,7 @@ intents = discord.Intents().all()
 intents.members = True
 intents.presences = True
 
-client = commands.Bot(command_prefix='!', intents=intents)
-slash = SlashCommand(client, sync_commands=True)
+client = commands.Bot(command_prefix='$', intents=intents)
 
 
 @client.event
@@ -29,20 +27,13 @@ async def on_message(message):
     if message.author == client.user:
         return
 
-    if message.content.startswith('$duck'):
+    if message.content == "duck":
         await message.channel.send('Quack!')
 
+    await client.process_commands(message)
 
-#testing purposes
-@client.event
-async def on_member_join(member, message):
-    if message.author == client.user:
-        return
-
-    await message.channel.send('Quack! {member} has joined this test server!')
-
-
-@client.command()
+# bot COMMANDS
+@client.command(name="ducky", help="Posts a random duck image")
 async def ducky(ctx):
     API = "https://random-d.uk/api/v2/random"
     async with request("GET", API, headers={}) as response:
