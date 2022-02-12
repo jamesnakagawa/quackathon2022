@@ -13,5 +13,5 @@ Default prefix: $
 https://discord.com/api/oauth2/authorize?client_id=942097154539913226&permissions=431644601408&scope=bot
 
 ### Commands:
-help: show help
+help: show help \n
 ducky: show random image of a ducky
