@@ -5,6 +5,8 @@ from client import client
 @client.event
 async def on_ready():
     print('We have logged in as {0.user}'.format(client))
+    channel = client.get_channel(942101706739699735)
+    await channel.send('Active')
 
 
 @client.command()
