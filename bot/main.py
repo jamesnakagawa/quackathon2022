@@ -68,7 +68,7 @@ async def spawn(ctx):
             duckValue = buffer['url']
             stats = duckmon.get_specific_duck()
             embed = discord.Embed(title="A Duck has spawned", description="ID: {} \nMood: {} \nAttack: {}\nDefence: {}".format(
-                stats[0], stats[1], stats[2], stats[3]), color=discord.Color.green())
+                stats[0], stats[1], stats[2], stats[3]), color=discord.Color.colorHex(stats[4]))
             embed.set_image(url=duckValue)
             await ctx.send(embed=embed)
         else:
