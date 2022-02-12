@@ -66,13 +66,13 @@ async def spawn(ctx):
         if response.status == 200:
             buffer = await response.json()
             duckValue = buffer['url']
+            stats = duckmon.get_specific_duck()
             embed = discord.Embed(title="A Duck has spawned", description="ID: {} \nMood: {} \nAttack: {}\nDefence: {}".format(
                 stats[0], stats[1], stats[2], stats[3]), color=discord.Color.green())
             embed.set_image(url=duckValue)
             await ctx.send(embed=embed)
         else:
             await ctx.send("Error getting image. API returned {}".format(response.status))
-    await ctx.send()
 
 # Run
 client.run(os.getenv('TOKEN'))
