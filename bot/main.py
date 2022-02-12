@@ -67,10 +67,10 @@ async def spawn(ctx):
         else:
             await ctx.send("Error getting image. API returned {}".format(response.status))
 
-    await ctx.send("ID: 23")
-    await ctx.send("Mood: Excited")
-    await ctx.send("Attack: 5")
-    await ctx.send("Defence: 2")
+    stats = duckmon.get_specific_duck()
+
+    await ctx.send("ID: {} \nMood: {} \nAttack: {}\nDefence: {}".format(stats[0], stats[1], stats[2], stats[3]))
+
 
 # Run
 client.run(os.getenv('TOKEN'))
