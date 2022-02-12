@@ -13,6 +13,8 @@ async def on_ready():
 
 @client.command()
 async def shutdown(ctx):
+    channel = client.get_channel(942101706739699735)
+    await channel.send('BOT SHUTDOWN')
     client.logout()
     client.close()
     exit()
