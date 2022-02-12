@@ -1,5 +1,6 @@
 import discord
 import os
+import duckmon
 from dotenv import load_dotenv
 
 load_dotenv()
