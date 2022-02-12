@@ -57,11 +57,18 @@ class SpecificDuck(Base):
   player_id = Column(ForeignKey('player.id'))
   player = relationship("Player", back_populates="ducks")
   nickname = Column(String, nullable=False)
-  level = Column(Integer, nullable=False)
-  current_hp = Column(Integer, nullable=False)
-  current_xp = Column(Integer, nullable=False)
+  level = Column(Integer, nullable=False, default=1)
+  current_hp = Column(Integer, nullable=False, default=100)
+  current_xp = Column(Integer, nullable=False, default=0)
+  fainted_on = Column(DateTime, nullable=True)
   created_on = Column(DateTime, default=datetime.now)
   updated_on = Column(DateTime, default=datetime.now, onupdate=datetime.now)
+
+  def attack_stat(self):
+    return self.level * self.duck_type.attack_coeff
+
+  def defence_stat(self):
+    return self.level * self.duck_type.defend_coeff
 
   def __repr__(self):
     return "<SpecificDuck(id='%s', nickname='%s')>" % (self.id, self.nickname)
@@ -73,15 +80,44 @@ class Battle(Base):
   player1 = relationship("Player", back_populates="current_battle")
   player2 = relationship("Player", back_populates="current_battle")
   duck1_id = Column(ForeignKey('duck1.id'))
-  duck2_id = Column(ForeignKey('duck2.id'))
+  duck2_id = Column(ForeignKey('duck2.id'), nullable=True)
   duck1 = relationship("Duck", back_populates="current_battle")
   duck2 = relationship("Duck", back_populates="current_battle")
-  accepted: Column(Boolean)
+  accepted: Column(Boolean, default=False)
+  turn: Column(Integer, default=0)
+  completed: Column(Boolean, default=False)
+
+  def accept(self, duck):
+    self.duck2 = duck
+    self.accepted = True
+
+  def attacker(self):
+    if (self.turn % 2 == 0):
+      return self.duck1
+    return self.duck2
+
+  def defender(self):
+    if (self.turn % 2 == 0):
+      return self.duck2
+    return self.duck1
+
+  def do_turn(self, choice):
+    if (choice == 1):
+      attacker_duck = self.attacker
+      defender_duck = self.defender
+      attack = 10 * attacker_duck.attack / defender_duck.defence
+      if (defender_duck.current_hp < attack):
+        defender_duck.fainted_on = datetime.now
+        return False
+      else:
+        defender_duck.current_hp -= attack
+        self.turn += 1
+        return True
 
 class GameState(Base):
   id: Column(Integer, primary_key=True)
-  wild_duck = relationship("Duck", back_populates="current_battle")
-  wild_duck_id: Column(Boolean('wild_duck.id'))
+  wild_duck = relationship("Duck")
+  wild_duck_id: Column(ForeignKey('wild_duck.id'))
 
 Base.metadata.create_all(engine)
 Session = sessionmaker(engine)
