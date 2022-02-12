@@ -1,4 +1,7 @@
 from client import client
+from lib import duckmon
+import discord
+from aiohttp import *
 
 # bot commands
 
