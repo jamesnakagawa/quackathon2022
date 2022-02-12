@@ -72,5 +72,10 @@ async def spawn(ctx):
         else:
             await ctx.send("Error getting image. API returned {}".format(response.status))
 
+
+@client.command()
+async def shutdown(ctx):
+    exit()
+
 # Run
 client.run(os.getenv('TOKEN'))
