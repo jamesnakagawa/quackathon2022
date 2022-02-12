@@ -11,7 +11,12 @@ from dotenv import load_dotenv
 load_dotenv()
 TOKEN = os.getenv('TOKEN')
 
-client = discord.Client()
+intents = discord.Intents().all()
+intents.members = True
+intents.presences = True
+
+client = commands.Bot(command_prefix='!', intents=intents)
+slash = SlashCommand(client, sync_commands=True)
 
 
 @client.event
