@@ -11,15 +11,14 @@ def get_specific_duck():
     # switch case for color based on mood
     moodValue = random.choice(mood)
     if moodValue == 'Feeling dead inside':
-        colorValue = 0x000000
+        colorValue = colorRGB('000000')
     elif moodValue == 'Happy and content':
-        colorValue = 0x00FF00
+        colorValue = colorRGB('00FF00')
     elif moodValue == 'Excited':
-        colorValue = 0xFFA500
+        colorValue = colorRGB('FA500')
 
     return random.choice(duck_id), moodValue, random.choice(attack_coeff), random.choice(defend_coeff), colorValue
 
 
 def colorRGB(hex):
-    hex = hex.lstrip('#')
     return tuple(int(hex[i:i+2], 16) for i in (0, 2, 4))
