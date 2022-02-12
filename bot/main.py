@@ -7,6 +7,7 @@ import json
 from aiohttp import *
 from dotenv import load_dotenv
 
+# Load .env file with token
 load_dotenv()
 TOKEN = os.getenv('TOKEN')
 
@@ -16,12 +17,12 @@ intents.presences = True
 
 client = commands.Bot(command_prefix='$', intents=intents)
 
-
+# On start
 @client.event
 async def on_ready():
     print('We have logged in as {0.user}'.format(client))
 
-
+# On message received
 @client.event
 async def on_message(message):
     if message.author == client.user:
@@ -32,7 +33,7 @@ async def on_message(message):
 
     await client.process_commands(message)
 
-# bot COMMANDS
+# bot commands
 @client.command(name="ducky", help="Posts a random duck image")
 async def ducky(ctx):
     API = "https://random-d.uk/api/v2/random"
@@ -45,4 +46,5 @@ async def ducky(ctx):
         else:
             await ctx.send("Error getting image. API returned {}".format(response.status))
 
+# Run
 client.run(os.getenv('TOKEN'))
