@@ -1,6 +1,5 @@
-from client import client
+from client import client, discord
 from lib import duckmon
-import discord
 from aiohttp import *
 
 # bot commands
@@ -23,6 +22,7 @@ async def ducky(ctx):
 async def spawn(ctx):
     spawnFunc(ctx)
 
+
 async def spawnFunc(ctx):
     API = "https://random-d.uk/api/v2/random"
     async with request("GET", API, headers={}) as response:
@@ -35,6 +35,6 @@ async def spawnFunc(ctx):
                 stats[0], stats[1], stats[2], stats[3]), color=discord.Color.from_rgb(c[0], c[1], c[2]))
             embed.set_image(url=duckValue)
             reaction = await ctx.send(embed=embed)
-            await reaction.add_reaction(emoji = '\N{THUMBS UP SIGN}')
+            await reaction.add_reaction(emoji='\N{THUMBS UP SIGN}')
         else:
             await ctx.send("Error getting image. API returned {}".format(response.status))
