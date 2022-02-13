@@ -71,25 +71,25 @@ async def on_message(message):
     if p2_battle is not None and p2_battle.is_my_turn(user):
       battle = p2_battle
 
-    if battle is not None:
-      if message.content.lower() in ['1']:
-        result = p1_battle.do_turn(1)
-        attacker = getdiscorduser(battle.attackerPlayer().handle)
-        attack_duck_name = battle.defender().nickname
-        defender = getdiscorduser(battle.defenderPlayer().handle)
-        if result == False:
-          xp, level_up = battle.win(attacker)
-          await attacker.send(f"Aw yiss! You get all the breadcrumbs.\n{attack_duck_name} ate up {xp} breadcrumbs. Nom nom nom")
-          if level_up > 0:
-            await attacker.send(f"Holey guacamoley! {attack_duck_name} leveled up!")
-          await defender.send(f"You lost. Damn")
-        else:
-          damage, remaining_hp = result
-          defend_duck_name = battle.defender().nickname
-          await attacker.send(f"{attack_duck_name} attacked for {damage} points! {defend_duck_name} has {remaining_hp} HP left.\nWaiting for your opponent to make a move...")
-          await defender.send(f"{defend_duck_name} got walloped and has {remaining_hp} HP left.\n\nWhat would you like to do?\n1) Attack")
+    if battle is not None and message.content.lower() in ['1']:
+      attacker = getdiscorduser(battle.attackerPlayer().handle)
+      attacker_player = getuser(battle.attackerPlayer().handle)
+      attack_duck_name = battle.defender().nickname
+      defender = getdiscorduser(battle.defenderPlayer().handle)
+      defend_duck_name = battle.defender().nickname
+
+      # turn switches as soon as this is called
+      result = p1_battle.do_turn(1)
+      if result == False:
+        xp, level_up = battle.win(attacker_player)
+        await attacker.send(f"Aw yiss! You get all the breadcrumbs.\n{attack_duck_name} ate up {xp} breadcrumbs. Nom nom nom")
+        if level_up > 0:
+          await attacker.send(f"Holey guacamoley! {attack_duck_name} leveled up!")
+        await defender.send(f"You lost. Damn")
       else:
-        await message.channel.send("Sorry, didn't understand you")
+        damage, remaining_hp = result
+        await attacker.send(f"{attack_duck_name} attacked for {damage} points! {defend_duck_name} has {remaining_hp} HP left.\nWaiting for your opponent to make a move...")
+        await defender.send(f"{defend_duck_name} got walloped and has {remaining_hp} HP left.\n\nWhat would you like to do?\n1) Attack")
 
   session.commit()
   await client.process_commands(message)

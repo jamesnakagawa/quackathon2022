@@ -96,10 +96,6 @@ class Battle(Base):
   turn = Column(Integer, default=0)
   completed = Column(Boolean, default=False)
 
-  def accept(self, duck):
-    self.duck2 = duck
-    self.accepted = True
-
   def attacker(self):
     if (self.turn % 2 == 0):
       return self.duck1
