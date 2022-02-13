@@ -1,7 +1,6 @@
 from client import *
 import asyncio
 import youtube_dl
-import imp
 
 youtube_dl.utils.bug_reports_message = lambda: ''
 
@@ -52,9 +51,6 @@ async def play(ctx, *args):
                 filename = await YTDLSource.from_url(args[0], loop=client.loop)
             else:
                 filename = "The_Duck_Song-MtN1YnoL46Q.m4a"
-            # path = imp.find_module('ffmpeg')
-            # print(path)
-            # path = path[1]
             voice_channel.play(discord.FFmpegPCMAudio(
                 executable='ffmpeg', source=filename))
         await ctx.send('**Now playing:** {}'.format(filename))
