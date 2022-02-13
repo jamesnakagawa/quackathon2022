@@ -28,7 +28,6 @@ async def on_message(message):
 
   p1_battle = user.current_battle_p1
   p2_battle = user.current_battle_p2
-  print(p1_battle, p2_battle)
 
   if p2_battle != None and p2_battle.accepted == False:
     if message.content.lower() in ['y', 'yes']:
@@ -48,12 +47,12 @@ async def on_message(message):
     if battle is not None:
       if message.content.lower() in ['1']:
         attacker = getdiscorduser(battle.attackerPlayer().handle)
-        attack_duck_name = battle.defender().nickname
+        attack_duck_name = battle.attacker().nickname
         defender = getdiscorduser(battle.defenderPlayer().handle)
         defend_duck_name = battle.defender().nickname
 
         # turn switches as soon as this is called
-        result = p1_battle.do_turn(1)
+        result = battle.do_turn(1)
         if result == False:
           xp, level_up = battle.win(user)
           await attacker.send(f"Aw yiss! You get all the breadcrumbs.\n{attack_duck_name} ate up {int(xp)} breadcrumbs. Nom nom nom")
