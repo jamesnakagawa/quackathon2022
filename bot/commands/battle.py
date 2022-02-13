@@ -9,22 +9,14 @@ def getuser(name):
 def getdiscorduser(name):
   return next((user for user in client.users if user.name == name), None)
 
-@client.command(name="test123", help="Test function")
-async def test123(ctx):
-  print("test")
-
 @client.command(name="challenge", help="Challenge another player to fight for breadcrumbs")
 async def challenge(ctx):
-  print('test')
   subcommand = ctx.message.content.split(' ')[1]
   p1 = getuser(ctx.author.name)
   if p1 == None:
     p1 = Player(handle=ctx.author.name)
     session.add(p1)
   p2 = getuser(subcommand)
-  print(subcommand)
-  print(p2)
-  print([user.name for user in client.users])
   if p2 == None:
     if subcommand in [user.name for user in client.users]:
       p2 = Player(handle=subcommand)
