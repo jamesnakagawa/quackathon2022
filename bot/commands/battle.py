@@ -25,10 +25,10 @@ async def challenge(ctx):
       await ctx.send("Sorry, couldn't find that user.")
       return
 
-  _, mood, attack, defend, *rest = duckmon.get_specific_duck()
+  _, mood, attack, defend, *rest = duckmon.get_specific_duck(p1.id)
   d1_type = DuckType(name='type 1', description=mood, attack_coeff=attack, defend_coeff=defend)
   d1 = SpecificDuck(nickname=f"{ctx.author.name}'s duck", duck_type=d1_type)
-  _, mood, attack, defend, *rest = duckmon.get_specific_duck()
+  _, mood, attack, defend, *rest = duckmon.get_specific_duck(p2.id)
   d2_type = DuckType(name='type 2', description=mood, attack_coeff=attack, defend_coeff=defend)
   d2 = SpecificDuck(nickname=f"{subcommand}'s duck", duck_type=d2_type)
   battle = Battle(player1=p1, player2=p2, duck1=d1, duck2=d2)

@@ -1,12 +1,12 @@
 import random
 import re
-from models import DuckType, Session, SpecificDuck
-import client
+from models import DuckType, SpecificDuck
+from client import client, session
 # import reaction
 # test module script
 
 
-def get_specific_duck():
+def get_specific_duck(player_id):
     duck_id = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9]
     mood = ['Feeling dead inside', 'Happy and content', 'Excited']
     attack_coeff = [2, 4, 6, 8, 10]
@@ -21,8 +21,8 @@ def get_specific_duck():
         colorValue = colorRGB('FA500')
 
     random_number = random.choice(duck_id)
-    duck_types = Session.query(DuckType).filter(DuckType.id == random_number).one_or_none()
-    duck = SpecificDuck(duck_type = duck_types, nickname = "nickname", player_id = id)
+    duck_types = session.query(DuckType).filter(DuckType.id == random_number).one_or_none()
+    duck = SpecificDuck(duck_type=duck_types, nickname="nickname", player_id=player_id)
 
     return random_number, moodValue, random.choice(attack_coeff), random.choice(defend_coeff), colorValue
 
