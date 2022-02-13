@@ -2,6 +2,7 @@ import random
 import re
 from bot.models import DuckType, Session, SpecificDuck
 import client
+import reaction
 # test module script
 
 
@@ -21,7 +22,7 @@ def get_specific_duck():
 
     random_number = random.choice(duck_id)
     duck_types = Session.query(DuckType).filter(DuckType.id == random_number).one_or_none()
-    #duck = SpecificDuck(duck_type = duck_types), nickname = "nickname")
+    duck = SpecificDuck(duck_type = duck_types, nickname = "nickname", player_id = id)
 
     return random_number, moodValue, random.choice(attack_coeff), random.choice(defend_coeff), colorValue
 
