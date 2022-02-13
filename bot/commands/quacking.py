@@ -42,6 +42,8 @@ class YTDLSource(discord.PCMVolumeTransformer):
 
 @client.command(name='play', help='To play song')
 async def play(ctx, *args):
+    await join(ctx)
+
     print(len(args))
     try:
         server = ctx.message.guild
