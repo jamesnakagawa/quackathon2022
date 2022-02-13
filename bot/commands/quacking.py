@@ -43,11 +43,11 @@ class YTDLSource(discord.PCMVolumeTransformer):
 
 
 @client.command()
-async def play(ctx):
+async def play(ctx, url: str):
     try:
         server = ctx.message.guild
         voice_channel = server.voice_client
-        url = 'https://www.youtube.com/watch?v=3DGdQ4gdqT4'
+        #url = 'https://www.youtube.com/watch?v=3DGdQ4gdqT4'
         async with ctx.typing():
             filename = await YTDLSource.from_url(url, loop=client.loop)
             voice_channel.play(discord.FFmpegPCMAudio(
@@ -98,5 +98,8 @@ async def resume(ctx):
 @client.command()
 async def stop(ctx):
     voice = discord.utils.get(client.voice_clients, guild=ctx.guild)
-    voice.stop()
-    ctx.send("Quacking stopped :(")
+    if voice.is_playing():
+        voice.stop()
+        ctx.send("Quacking stopped :(")
+    else:
+        ctx.send("Not quacking at the moment.")
