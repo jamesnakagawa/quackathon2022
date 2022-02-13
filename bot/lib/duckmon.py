@@ -1,8 +1,8 @@
 import random
 import re
-from bot.models import DuckType, Session, SpecificDuck
+from models import DuckType, Session, SpecificDuck
 import client
-import reaction
+# import reaction
 # test module script
 
 

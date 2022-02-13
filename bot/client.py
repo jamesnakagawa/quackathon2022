@@ -1,7 +1,7 @@
 import discord
 from discord.ext import commands
 import os
-from bot.models import DuckType
+from models import DuckType
 import models
 import random
 from aiohttp import *
@@ -34,6 +34,6 @@ DuckType(name = "Lilia", attack_coeff = random.randint(15, 30), defend_coeff = r
 
 #query_array = [duck_type1, duck_type2, duck_type3, duck_type4, duck_type5, duck_type6, duck_type7, duck_type8, duck_type9]
 
-session.query(DuckType).count(9)
+session.query(DuckType).count()
 session.commit()
 
