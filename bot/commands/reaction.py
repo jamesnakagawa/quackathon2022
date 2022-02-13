@@ -1,4 +1,3 @@
-from turtle import clear
 from client import client
 
 @client.event
