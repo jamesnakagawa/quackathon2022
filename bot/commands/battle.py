@@ -1,7 +1,5 @@
-from client import client
-from models import Session, Player, Battle
-
-session = Session()
+from client import client, session
+from models import Player, Battle
 
 @client.command(name="challenge", help="Challenge another player to fight for breadcrumbs")
 async def challenge(ctx):
