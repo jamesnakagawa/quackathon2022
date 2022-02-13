@@ -37,6 +37,7 @@ class YTDLSource(discord.PCMVolumeTransformer):
         if 'entries' in data:
             data = data['entries'][0]
         filename = data['title'] if stream else ytdl.prepare_filename(data)
+        print(filename)
         return filename
 
 
