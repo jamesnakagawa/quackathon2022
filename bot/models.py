@@ -17,10 +17,10 @@ class Player(Base):
   created_on = Column(DateTime, default=datetime.now)
   updated_on = Column(DateTime, default=datetime.now, onupdate=datetime.now)
   ducks = relationship("SpecificDuck", back_populates="player")
-  current_battle_p1 = relationship("Battle", back_populates="player1")
-  current_battle_p2 = relationship("Battle", back_populates="player2")
 
   def current_battle(self):
+    if not 'current_battle_p1' in self and 'current_battle_p2' in self:
+      return None
     return self.current_battle_p1 or self.current_battle_p2
 
   def available_ducks(self):
@@ -42,11 +42,6 @@ class DuckType(Base):
   created_on = Column(DateTime, default=datetime.now)
   updated_on = Column(DateTime, default=datetime.now, onupdate=datetime.now)
   specific_ducks = relationship("SpecificDuck", back_populates="duck_type")
-  current_battle_d1 = relationship("Battle", back_populates="duck1")
-  current_battle_d2 = relationship("Battle", back_populates="duck2")
-
-  def current_battle(self):
-    return self.current_battle_d1 or self.current_battle_d2
 
   def __repr__(self):
     return "<DuckType(id='%s', name='%s')>" % (self.id, self.name)
@@ -67,6 +62,11 @@ class SpecificDuck(Base):
   created_on = Column(DateTime, default=datetime.now)
   updated_on = Column(DateTime, default=datetime.now, onupdate=datetime.now)
 
+  def current_battle(self):
+    if not 'current_battle_d1' in self and 'current_battle_d2' in self:
+      return None
+    return self.current_battle_d1 or self.current_battle_d2
+
   def attack_stat(self):
     return self.level * self.duck_type.attack_coeff
 
@@ -77,18 +77,20 @@ class SpecificDuck(Base):
     return "<SpecificDuck(id='%s', nickname='%s')>" % (self.id, self.nickname)
 
 class Battle(Base):
-  id: Column(Integer, primary_key=True)
-  player1_id = Column(ForeignKey('player1.id'))
-  player2_id = Column(ForeignKey('player2.id'))
-  player1 = relationship("Player", back_populates="current_battle")
-  player2 = relationship("Player", back_populates="current_battle")
-  duck1_id = Column(ForeignKey('duck1.id'))
-  duck2_id = Column(ForeignKey('duck2.id'), nullable=True)
-  duck1 = relationship("Duck", back_populates="current_battle")
-  duck2 = relationship("Duck", back_populates="current_battle")
-  accepted: Column(Boolean, default=False)
+  __tablename__ = 'battle'
+
+  id = Column(Integer, primary_key=True)
+  player1_id = Column(ForeignKey('player.id'))
+  player2_id = Column(ForeignKey('player.id'))
+  player1 = relationship("Player", back_populates="current_battle_p1", foreign_keys=[player1_id])
+  player2 = relationship("Player", back_populates="current_battle_p2", foreign_keys=[player2_id])
+  duck1_id = Column(ForeignKey('specific_duck.id'))
+  duck2_id = Column(ForeignKey('specific_duck.id'), nullable=True)
+  duck1 = relationship("SpecificDuck", back_populates="current_battle_d1", foreign_keys=[duck1_id])
+  duck2 = relationship("SpecificDuck", back_populates="current_battle_d2", foreign_keys=[duck2_id])
+  accepted = Column(Boolean, default=False)
   turn: Column(Integer, default=0)
-  completed: Column(Boolean, default=False)
+  completed = Column(Boolean, default=False)
 
   def accept(self, duck):
     self.duck2 = duck
@@ -117,10 +119,17 @@ class Battle(Base):
         self.turn += 1
         return True
 
+Player.current_battle_p1 = relationship("Battle", back_populates="player1", foreign_keys=[Battle.player1_id])
+Player.current_battle_p2 = relationship("Battle", back_populates="player2", foreign_keys=[Battle.player2_id])
+SpecificDuck.current_battle_d1 = relationship("Battle", back_populates="duck1", foreign_keys=[Battle.duck1_id])
+SpecificDuck.current_battle_d2 = relationship("Battle", back_populates="duck2", foreign_keys=[Battle.duck2_id])
+
 class GameState(Base):
-  id: Column(Integer, primary_key=True)
-  wild_duck = relationship("Duck")
-  wild_duck_id: Column(ForeignKey('wild_duck.id'))
+  __tablename__ = 'state'
+
+  id = Column(Integer, primary_key=True)
+  wild_duck = relationship("SpecificDuck")
+  wild_duck_id = Column(ForeignKey('specific_duck.id'))
 
 Base.metadata.create_all(engine)
 Session = sessionmaker(engine)
