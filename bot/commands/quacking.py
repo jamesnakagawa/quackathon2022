@@ -14,7 +14,6 @@ ytdl_format_options = {
     'quiet': True,
     'no_warnings': True,
     'default_search': 'auto',
-    # bind to ipv4 since ipv6 addresses cause issues sometimes
     'source_address': '0.0.0.0'
 }
 ffmpeg_options = {
@@ -75,7 +74,7 @@ async def leave(ctx):
         await ctx.send("The duck is not connected to a voice channel.")
 
 
-@client.command(name='stop', help='Stops the song')
+@client.command(name='pause', help='This command pauses the song')
 async def pause(ctx):
     voice = discord.utils.get(client.voice_clients, guild=ctx.guild)
     if voice.is_playing():
