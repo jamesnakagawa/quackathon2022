@@ -15,7 +15,8 @@ async def on_ready():
 async def shutdown(ctx):
     channel = client.get_channel(942101706739699735)
     voice_client = ctx.message.guild.voice_client
-    await voice_client.disconnect()
+    if voice_client is not None:
+        await voice_client.disconnect()
     await channel.send('BOT SHUTDOWN')
     client.logout()
     client.close()
