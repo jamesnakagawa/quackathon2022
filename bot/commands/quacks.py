@@ -31,6 +31,7 @@ async def spawn(ctx):
             embed = discord.Embed(title="A Duck has spawned", description="ID: {} \nMood: {} \nAttack: {}\nDefence: {}".format(
                 stats[0], stats[1], stats[2], stats[3]), color=discord.Color.from_rgb(c[0], c[1], c[2]))
             embed.set_image(url=duckValue)
-            await ctx.send(embed=embed)
+            reaction = await ctx.send(embed=embed)
+            await reaction.add_reaction(emoji = '\N{THUMBS UP SIGN}')
         else:
             await ctx.send("Error getting image. API returned {}".format(response.status))

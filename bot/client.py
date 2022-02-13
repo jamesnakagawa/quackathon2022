@@ -11,5 +11,6 @@ TOKEN = os.getenv('TOKEN')
 intents = discord.Intents().all()
 intents.members = True
 intents.presences = True
+intents.reactions = True
 
 client = commands.Bot(command_prefix='$', intents=intents)
