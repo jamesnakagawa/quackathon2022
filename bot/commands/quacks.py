@@ -21,6 +21,9 @@ async def ducky(ctx):
 
 @client.command(name="spawn", help="Spawns a random duck")
 async def spawn(ctx):
+    spawnFunc(ctx)
+
+async def spawnFunc(ctx):
     API = "https://random-d.uk/api/v2/random"
     async with request("GET", API, headers={}) as response:
         if response.status == 200:
