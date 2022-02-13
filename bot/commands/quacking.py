@@ -42,16 +42,21 @@ class YTDLSource(discord.PCMVolumeTransformer):
 
 
 @client.command(name='play', help='To play song')
-async def play(ctx, url):
+async def play(ctx, *args):
+    print(len(args))
     try:
         server = ctx.message.guild
         voice_channel = server.voice_client
         async with ctx.typing():
-            filename = await YTDLSource.from_url(url, loop=client.loop)
-            path = imp.find_module('ffmpeg')
-            path = path[1]
+            if (len(args) > 0):
+                filename = await YTDLSource.from_url(args[0], loop=client.loop)
+            else:
+                filename = "The_Duck_Song-MtN1YnoL46Q.m4a"
+            # path = imp.find_module('ffmpeg')
+            # print(path)
+            # path = path[1]
             voice_channel.play(discord.FFmpegPCMAudio(
-                executable=path, source=filename))
+                executable='ffmpeg', source=filename))
         await ctx.send('**Now playing:** {}'.format(filename))
         ctx.send("Let the quacking commence!")
     except:
