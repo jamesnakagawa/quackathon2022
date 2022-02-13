@@ -20,7 +20,7 @@ async def ducky(ctx):
 
 @client.command(name="spawn", help="Spawns a random duck")
 async def spawn(ctx):
-    spawnFunc(ctx)
+    await spawnFunc(ctx)
 
 
 async def spawnFunc(ctx):
