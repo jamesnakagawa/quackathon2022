@@ -43,19 +43,19 @@ class YTDLSource(discord.PCMVolumeTransformer):
 
 
 @client.command(pass_context=True)
-async def play(self, ctx, *, url):
+async def play(ctx, url):
     print(url)
     server = ctx.message.guild
     voice_channel = server.voice_client
 
     async with ctx.typing():
-        player = await YTDLSource.from_url(url, loop=self.bot.loop)
+        player = await YTDLSource.from_url(url, loop=client.loop)
         ctx.voice_channel.play(player, after=lambda e: print(
             'Player error: %s' % e) if e else None)
     await ctx.send('Now playing: {}'.format(player.title))
 
 # @client.command()
-# async def play(ctx, *, url):
+# async def play(ctx, url):
 #     try:
 #         server = ctx.message.guild
 #         voice_channel = server.voice_client
