@@ -103,6 +103,6 @@ async def stop(ctx):
     voice = discord.utils.get(client.voice_clients, guild=ctx.guild)
     if voice.is_playing():
         voice.stop()
-        await ctx.send("Qucking stopped!")
+        await ctx.send("Quacking stopped!")
     else:
         await ctx.send("Not quacking at the moment.")
