@@ -37,7 +37,6 @@ class YTDLSource(discord.PCMVolumeTransformer):
         if 'entries' in data:
             data = data['entries'][0]
         filename = data['title'] if stream else ytdl.prepare_filename(data)
-        print(filename)
         return filename
 
 
@@ -49,7 +48,7 @@ async def play(ctx, url):
         async with ctx.typing():
             filename = await YTDLSource.from_url(url, loop=client.loop)
             voice_channel.play(discord.FFmpegPCMAudio(
-                executable="ffmpeg.exe", source=filename))
+                executable="ffmpeg", source=filename))
         await ctx.send('**Now playing:** {}'.format(filename))
         ctx.send("Let the quacking commence!")
     except:
