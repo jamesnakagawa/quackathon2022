@@ -1,6 +1,7 @@
 from client import *
 import asyncio
 import youtube_dl
+import imp
 
 youtube_dl.utils.bug_reports_message = lambda: ''
 
@@ -40,15 +41,17 @@ class YTDLSource(discord.PCMVolumeTransformer):
         return filename
 
 
-@client.command(name='play_song', help='To play song')
+@client.command(name='play', help='To play song')
 async def play(ctx, url):
     try:
         server = ctx.message.guild
         voice_channel = server.voice_client
         async with ctx.typing():
             filename = await YTDLSource.from_url(url, loop=client.loop)
+            path = imp.find_module('ffmpeg')
+            path = path[1]
             voice_channel.play(discord.FFmpegPCMAudio(
-                executable="ffmpeg", source=filename))
+                executable=path, source=filename))
         await ctx.send('**Now playing:** {}'.format(filename))
         ctx.send("Let the quacking commence!")
     except:

@@ -19,8 +19,6 @@ class Player(Base):
   ducks = relationship("SpecificDuck", back_populates="player")
 
   def current_battle(self):
-    if not 'current_battle_p1' in self and 'current_battle_p2' in self:
-      return None
     return self.current_battle_p1 or self.current_battle_p2
 
   def available_ducks(self):
@@ -37,8 +35,8 @@ class DuckType(Base):
   description = Column(Text,  nullable=True)
   attack_coeff = Column(Float, nullable=False)
   defend_coeff = Column(Float, nullable=False)
-  hp_coeff = Column(Float, nullable=False)
-  image_url = Column(String, nullable=False)
+  hp_coeff = Column(Float, nullable=True)
+  image_url = Column(String, nullable=True)
   created_on = Column(DateTime, default=datetime.now)
   updated_on = Column(DateTime, default=datetime.now, onupdate=datetime.now)
   specific_ducks = relationship("SpecificDuck", back_populates="duck_type")
@@ -63,14 +61,12 @@ class SpecificDuck(Base):
   updated_on = Column(DateTime, default=datetime.now, onupdate=datetime.now)
 
   def current_battle(self):
-    if not 'current_battle_d1' in self and 'current_battle_d2' in self:
-      return None
     return self.current_battle_d1 or self.current_battle_d2
 
-  def attack_stat(self):
+  def attack(self):
     return self.level * self.duck_type.attack_coeff
 
-  def defence_stat(self):
+  def defence(self):
     return self.level * self.duck_type.defend_coeff
 
   def __repr__(self):
@@ -89,7 +85,7 @@ class Battle(Base):
   duck1 = relationship("SpecificDuck", back_populates="current_battle_d1", foreign_keys=[duck1_id])
   duck2 = relationship("SpecificDuck", back_populates="current_battle_d2", foreign_keys=[duck2_id])
   accepted = Column(Boolean, default=False)
-  turn: Column(Integer, default=0)
+  turn = Column(Integer, default=0)
   completed = Column(Boolean, default=False)
 
   def accept(self, duck):
@@ -106,11 +102,24 @@ class Battle(Base):
       return self.duck2
     return self.duck1
 
+  def attackerPlayer(self):
+    if (self.turn % 2 == 0):
+      return self.player1
+    return self.player2
+
+  def defenderPlayer(self):
+    if (self.turn % 2 == 0):
+      return self.player2
+    return self.player1
+
+  def is_my_turn(self, player):
+    return player == self.attackerPlayer()
+
   def do_turn(self, choice):
     if (choice == 1):
-      attacker_duck = self.attacker
-      defender_duck = self.defender
-      attack = randint(8, 12) * attacker_duck.attack / defender_duck.defence
+      attacker_duck = self.attacker()
+      defender_duck = self.defender()
+      attack = randint(8, 12) * attacker_duck.attack() / defender_duck.defence()
       if (defender_duck.current_hp < attack):
         defender_duck.fainted_on = datetime.now
         return False
@@ -119,10 +128,10 @@ class Battle(Base):
         self.turn += 1
         return True
 
-Player.current_battle_p1 = relationship("Battle", back_populates="player1", foreign_keys=[Battle.player1_id])
-Player.current_battle_p2 = relationship("Battle", back_populates="player2", foreign_keys=[Battle.player2_id])
-SpecificDuck.current_battle_d1 = relationship("Battle", back_populates="duck1", foreign_keys=[Battle.duck1_id])
-SpecificDuck.current_battle_d2 = relationship("Battle", back_populates="duck2", foreign_keys=[Battle.duck2_id])
+Player.current_battle_p1 = relationship("Battle", back_populates="player1", foreign_keys=[Battle.player1_id], uselist=False)
+Player.current_battle_p2 = relationship("Battle", back_populates="player2", foreign_keys=[Battle.player2_id], uselist=False)
+SpecificDuck.current_battle_d1 = relationship("Battle", back_populates="duck1", foreign_keys=[Battle.duck1_id], uselist=False)
+SpecificDuck.current_battle_d2 = relationship("Battle", back_populates="duck2", foreign_keys=[Battle.duck2_id], uselist=False)
 
 class GameState(Base):
   __tablename__ = 'state'
