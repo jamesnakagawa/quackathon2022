@@ -69,6 +69,14 @@ class SpecificDuck(Base):
   def defence(self):
     return self.level * self.duck_type.defend_coeff
 
+  def eat_breadcrumbs(self, xp):
+    self.current_xp += xp
+    if self.current_xp > 5000:
+      self.level += 1
+      self.current_xp -= 5000
+      return 1
+    return 0
+
   def __repr__(self):
     return "<SpecificDuck(id='%s', nickname='%s')>" % (self.id, self.nickname)
 
@@ -121,12 +129,22 @@ class Battle(Base):
       defender_duck = self.defender()
       attack = randint(8, 12) * attacker_duck.attack() / defender_duck.defence()
       if (defender_duck.current_hp < attack):
-        defender_duck.fainted_on = datetime.now
+        defender_duck.fainted_on = datetime.now()
         return False
       else:
         defender_duck.current_hp -= attack
         self.turn += 1
-        return True
+        return attack, defender_duck.current_hp
+
+  def win(self, winner):
+    xp = randint(500, 2000)
+    duck = None
+    if winner == self.player1:
+      duck = self.duck1
+    elif winner == self.player2:
+      duck = self.duck2
+    level_up = duck.eat_breadcrumbs(xp)
+    return xp, level_up
 
 Player.current_battle_p1 = relationship("Battle", back_populates="player1", foreign_keys=[Battle.player1_id], uselist=False)
 Player.current_battle_p2 = relationship("Battle", back_populates="player2", foreign_keys=[Battle.player2_id], uselist=False)
